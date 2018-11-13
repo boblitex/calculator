@@ -7,14 +7,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import static java.lang.Double.valueOf;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText editText;
     private EditText newNumber;
     private TextView textView;
 
-    private double op1;
-    private double op2;
+    private Double op1 = null;
+    private Double op2 = null;
     private String pendingOp ="=";
 
     private static final int[] ButtonArray ={R.id.button0, R.id.button1,R.id.button2,R.id.button3,R.id.button4,R.id.button5,R.id.button6,R.id.button7,R.id.button8,R.id.button9,
@@ -70,7 +72,41 @@ public class MainActivity extends AppCompatActivity {
 
     }
     private void performOperation(String value, String operation){
-        textView.setText(operation);
+        if (null == op1) {
+            op1 = valueOf(value);
+        } else {
+            op2 = valueOf(value);
+
+            if (pendingOp.equals("=")) {
+                pendingOp = operation;
+            }
+            switch (pendingOp) {
+                case "=":
+                    op1 = op2;
+                    break;
+                case "/":
+                    if (op2 == 0) {
+                        op1 = 0.0;
+                    } else {
+                        op1 /= op2;
+                    }
+                    break;
+                case "*":
+                    op1 *= op2;
+                    break;
+                case "-":
+                    op1 -= op2;
+                    break;
+                case "+":
+                    op1 += op2;
+                    break;
+            }
+        }
+
+        editText.setText(String.format(String.valueOf(op1)));
+        newNumber.setText("");
+
+
     }
 
 
